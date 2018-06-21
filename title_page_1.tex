@@ -170,10 +170,36 @@ Mỗi nút có thể chứa 1 (hoặc nhiều) nhãn (labels). Nhãn giúp nhóm
 \caption{\label{fig:catfoodnode} Nút mèo và nút thức ăn}
 \end{figure}
 
-
 \subsection{Quan hệ (relationships)}
+Quan hệ nối các nút lại để tạo thành biểu đồ. Mỗi quan hệ luôn có: 
 
-\subsection{Comments}
+\begin{itemize}
+\item Tên quan hệ
+\item Hướng 
+\item Nút đầu
+\item Nút cuối
+\end{itemize}
+
+Hình \ref{fig:relationships} biểu diễn quan hệ LIKES từ nút CAT có name = "Stormy" đến nút CAT có name = "Pusheen"
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{image/relationships.PNG}
+\caption{\label{fig:relationships} Quan hệ LIKES từ mèo Stormy đối với Pusheen}
+\end{figure}
+
+Quan hệ có thể chứa thuộc tính (properties) như nút (hình \ref{fig:relationshipsprop}). 
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{image/quan_he_thuoc_tin.PNG}
+\caption{\label{fig:relationshipsprop} Quan hệ LIKES từ mèo Stormy đối với Pusheen}
+\end{figure}
+
+
+\section{Cypher}
+
+
 
 Comments can be added to the margins of the document using the \todo{Here's a comment in the margin!} todo command, as shown in the example on the right. You can also add inline comments too:
 
