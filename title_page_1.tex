@@ -24,7 +24,7 @@
 % move this file to the same directory as the LaTeX file you wish to add it to. 
 % Then add \input{./title_page_1.tex} to your LaTeX file where you want your
 % title page.
-%
+%t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Neo4j cơ bản và ứng dụng}
 %----------------------------------------------------------------------------------------
@@ -38,6 +38,15 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
 
 \begin{document}
 
@@ -105,18 +114,64 @@ TS. Nguyễn Trần Minh Thư % Supervisor's Name
 \end{titlepage}
 
 
-\section{Introduction}
-Chữ tiếng việt
-Your introduction goes here! Some examples of commonly used commands and features are listed below, to help you get started.
+\section{Giới thiệu}
+Neo4j là nền tảng cơ sở dữ liệu đồ thị (Neo4j Graph Platform) được công ty Neo4j phát triển. 
 
-If you have a question, please use the support box in the bottom right of the screen to get in touch. 
+Trang chủ:  \url{https://neo4j.com}   
+% \section{Some \LaTeX{} Examples}
+% \label{sec:examples}
 
-\section{Some \LaTeX{} Examples}
-\label{sec:examples}
+\subsection{Các phiên bản}
+Neo4j có 2 phiên bản \footnote{\url{https://neo4j.com/subscriptions/}}
 
-\subsection{Sections}
+\begin{itemize}
+\item \textbf{Community Edition} - Phiên bản cộng đồng: Đây là phiên bản miễn phí mã nguồn mở. Thích hợp cho các dự án nhỏ.
+\item \textbf{Enterprise Edition} - Phiên bản doanh nghiệp: hiên bản có phí cho doanh nghiệp, có thêm nhiều chức năng như khả năng mở rộng theo chiều dài và chiều sâu, chức năng quản lý phân quyền. Ngoài ra, hiệu suất của phiên bản doanh nghiệp cao hơn phiên bản cộng đồng (vd: câu truy vấn nhanh hơn 70\%, ghi dữ liệu nhanh gấp 5 lần). Phiên bản doanh nghiệp bao gồm hỗ trợ kỹ thuật từ Neo4j 
+\end{itemize}
 
-Use section and subsection commands to organize your document. \LaTeX{} handles all the formatting and numbering automatically. Use ref and label commands for cross-references.
+\subsection{Cài đặt}
+Tài về:  \url{https://neo4j.com/download/}  
+Có thể cài bảng Neo4j Desktop trên máy tính cá nhân. 
+
+
+\section{Cơ sở dữ liệu đồ thị}
+Neo4j sử dụng Mô hình biểu đồ thuộc tính được gắn nhãn (Labeled Property Graph Mode). 
+
+Mô hình bao gồm 4 thành phần: 
+
+\begin{itemize}
+\item Nút (nodes)
+\item Quan hệ (relationships)
+\item Thuộc tính  (properties)
+\item Nhãn (labels)
+\end{itemize}
+
+\subsection{Nút (nodes)}
+Nút (nodes) chứa các thuộc tính (properties). Một nút có thể xem là một bảng ghi gồm nhiều các cặp khóa - giá trị tùy ý. Trong Neo4j, khóa là chuổi còn giá trị là chuỗi Java và các kiểu dữ liệu nguyên thủy, và mảng của các dữ liệu đó. 
+
+% % Commands to include a figure:
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{image/node.PNG}
+\caption{\label{fig:node} Nút}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{image/thuoc_tinh.PNG}
+\caption{\label{fig:node} Thuộc tính của nút}
+\end{figure}
+
+Mỗi nút có thể chứa 1 (hoặc nhiều) nhãn (labels). Nhãn giúp nhóm các nút lại với nhau. Có thể hiểu nhãn của nút là loại thực thể (mèo, đồ ăn, ...) của nút đó. Ví dụ hình \ref{fig:catfoodnode}, Nút xanh gán nhãn mèo, còn nút đỏ gán nhãn thức ăn.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{image/complete_node_with_cat_and_food.PNG}
+\caption{\label{fig:catfoodnode} Nút mèo và nút thức ăn}
+\end{figure}
+
+
+\subsection{Quan hệ (relationships)}
 
 \subsection{Comments}
 
@@ -128,22 +183,22 @@ Comments can be added to the margins of the document using the \todo{Here's a co
 
 Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example. You can upload a figure (JPEG, PNG or PDF) using the files menu. To include it in your document, use the includegraphics command as in the code for Figure~\ref{fig:frog} below.
 
-% Commands to include a figure:
-\begin{figure}
-\centering
-\includegraphics[width=0.5\textwidth]{frog.jpg}
-\caption{\label{fig:frog}This is a figure caption.}
-\end{figure}
+% % Commands to include a figure:
+% \begin{figure}
+% \centering
+% \includegraphics[width=0.5\textwidth]{frog.jpg}
+% \caption{\label{fig:frog}This is a figure caption.}
+% \end{figure}
 
-\begin{table}
-\centering
-\begin{tabular}{l|r}
-Item & Quantity \\\hline
-Widgets & 42 \\
-Gadgets & 13
-\end{tabular}
-\caption{\label{tab:widgets}An example table.}
-\end{table}
+% \begin{table}
+% \centering
+% \begin{tabular}{l|r}
+% Item & Quantity \\\hline
+% Widgets & 42 \\
+% Gadgets & 13
+% \end{tabular}
+% \caption{\label{tab:widgets}An example table.}
+% \end{table}
 
 \subsection{Mathematics}
 
