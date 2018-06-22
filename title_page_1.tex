@@ -318,7 +318,56 @@ UNION: gộp kết quả của hai hoặc nhiều truy vấn
 
 START: Chọn một hoặc một số điểm bắt đầu (nút hoặc quan hệ). START không được phát triển nữa. Ta nên dùng MATCH 
 
+\section{Xây dựng ứng dung dữ liệu đồ thị}
 
+\subsection{Đặc tả mô hình dữ liệu theo nhu cầu của ứng dụng}
+
+Câu hỏi mà ta cần hỏi dữ liệu giúp ta xác định thực thể và mối quan hệ. Câu chuyện người dùng (user-stories) cho cái nhìn trực quan, tập trung vào nhu cầu người dùng cuả ứng dụng. 
+
+Ví dụ: 
+
+"\textbf{LÀ} một đọc giả, \textbf{TÔI MUỐN} biết những cuốn sách yêu thích của các đọc giả khác cùng thích những cuốn sách giống tôi \textbf{ĐỂ} tôi có thể tìm thêm sách để đọc"
+
+Qua câu chuyện người dùng này, vế \textbf{LÀ} giúp ta xác định thành phần của đồ thị, bao gồm 
+
+\begin{itemize}
+\item Nút: sách  
+\item Nút: đọc giả 
+\item Quan hệ: thích  
+\end{itemize}
+
+Vế \textbf{TÔI MUỐN} đặt câu hỏi: Sách nào mà những đọc giả cùng đọc sách giống tôi thích. Vế này thể hiện quan hệ thích  và các thực thể sách, đọc giả khác.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{image/bookfull.png}
+\caption{\label{fig:graphbook} Đồ thị sách}
+\end{figure}
+
+Ta có đồ thị như hình \ref{fig:graphbook}. Giả sử người dùng là Alice, Alice muốn tìm xem những người thích cuốn sách Dune sẽ thích cuốn nào. Ta sẽ dùng câu truy vấn 
+
+\begin{lstlisting}[caption={Cypher tìm người thích đọc sách tên Dune}, label={lst:cypherdune}]
+MATCH (:READER {name:'Alice'})-[:LIKES]->(:BOOK {name:'Dune'})<-[:LIKES]-(:READER)-[:LIKES]->(books:BOOK) RETURN books
+\end{lstlisting}
+
+\subsection{Nút biểu diễn vật thể, quan hệ biểu diễn cấu trúc}
+
+Một số quy tắc khi nào dùng nút, khi nào dùng quan hệ
+
+\begin{itemize}
+\item Nút thể hiện thực thể, nó là cái vật gì đó trong lĩnh vực mà ta quan tâm. Vật đó có thể gán nhãn và nhóm 
+\item Quan hệ thể hiện sự liên kết giữa các thực thể và xây dựng nên bối cảnh về mặc ngữ nghĩa cho mỗi thực thể, cấu thành miền ta quan tâm
+\item Dùng hướng của quan hệ để làm rõ mối liên kết ngữ nghĩa. Đối với các quan hệ vô hướng, ta không nên tạo 2 quan hệ mà chỉ cần mặc kệ hướng của quan hệ trong câu truy vấn 
+\item Thuộc tính của nút là thuộc tính của thực thể, thêm những thông tin hệ thống như mốc thời gian, phiên bản 
+\item Sử dụng thuộc tính của quan hệ để thể hiện hệ số, mức quan trọng, chất lượng của quan hệ, và thêm nhưng thông tin hệ thống như mốc thời gian, phiên bản 
+\end{itemize}
+
+
+
+
+\subsection{Quan hệ chung với quan hệ chuyên môn hóa}
+
+\subsection{}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
