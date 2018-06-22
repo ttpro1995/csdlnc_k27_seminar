@@ -38,7 +38,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
-
+\usepackage{listings}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
@@ -184,7 +184,7 @@ Hình \ref{fig:relationships} biểu diễn quan hệ LIKES từ nút CAT có na
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{image/relationships.PNG}
+\includegraphics[width=0.7\textwidth]{image/relationships.PNG}
 \caption{\label{fig:relationships} Quan hệ LIKES từ mèo Stormy đối với Pusheen}
 \end{figure}
 
@@ -192,18 +192,141 @@ Quan hệ có thể chứa thuộc tính (properties) như nút (hình \ref{fig:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{image/quan_he_thuoc_tin.PNG}
+\includegraphics[width=0.7\textwidth]{image/quan_he_thuoc_tin.PNG}
 \caption{\label{fig:relationshipsprop} Quan hệ LIKES từ mèo Stormy đối với Pusheen}
 \end{figure}
 
-
+% chuong 3
 \section{Cypher}
 
+Cypher là ngôn ngữ truy vấn cho cơ sở dữ liệu đồ thị. Một câu truy vấn có cấu trúc như hình \ref{fig:cypher}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{image/chap2cypher.png}
+\caption{\label{fig:cypher} Cấu trúc một Cypher đơn giản }
+\end{figure}
+
+Một Cypher bao gồm nhiều vế 
+\begin{itemize}
+\item MATCH 
+\item CREATE 
+\item RETURN
+\item WHERE
+\item MERGE
+\item DELETE
+\item SET
+\item FOREACH 
+\item UNION
+\item WITH 
+\item START
+\end{itemize}
+
+\subsection{Triết lý của Cypher}
+\label{sec:cypherpil}
+Cypher được thiết kế để mọi người, bao gồm người lập trình, chuyên viên cơ sở dữ liệu, và các nghiệp vụ liên quan có thể đọc và hiểu dễ dàng. Cypher sử dụng sơ đồ (vẽ ASCII) để vẽ đồ thị
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{image/chap3graphdiagram.png}
+\caption{\label{fig:graphdiagram} Đồ thị}
+\end{figure}
+
+Đồ thị như hình \ref{fig:graphdiagram} được biểu diễn như sau: 
+
+\begin{lstlisting}[caption={Cypher}, label={lst:cypherjim1}, language=SQL]
+(emil)<-[:KNOWS]-(jim)-[:KNOWS]->(ian)-[:KNOWS]->(emil) 
+\end{lstlisting}
+
+% (emil)<-[:KNOWS]-(jim)-[:KNOWS]->(ian)-[:KNOWS]->(emil) 
+
+Cypher ở listing \ref{lst:cypherjim1} thể hiện "đường đi" từ jim tới hai nút tên là ian và emil. Nút ian cũng nối tới nút emil. ian, jim và emil là định danh (identifier). Định danh giúp ta chỉ tới một nút nhiều hơn một lần khi ta định nghĩa một đồ thị. 
+
+\begin{lstlisting}[caption={Cypher với thuộc tính}, label={lst:cypherjim2}, language=SQL]
+(emil:Person {name:'Emil'})
+<-[:KNOWS]-(jim:Person {name:'Jim'})
+-[:KNOWS]->(ian:Person {name:'Ian'})
+-[:KNOWS]->(emil) 
+\end{lstlisting}
+
+Listing \ref{lst:cypherjim2} cùng định nghĩa một đồ thị ở hình \ref{fig:graphdiagram} nhưng có thêm thuộc tính. Định danh emil gắn với nút có nhãn là Person và có thuộc tính name có giá trị là Emil. 
+
+\subsection{Tìm với MATCH}
+
+MATCH là một trong những vế quan trọng của Cypher. Về MATCH sử dụng hình vẽ ASCII để biểu diễn đồ thị (như đẵ trình bày ở mục \ref{sec:cypherpil}.
+
+\begin{itemize}
+\item Ta biểu diễn nút (node) trong ngoặc tròn. Ví dụ: (jim:Person {name:'Jim'})
+\item Ta biểu diễn quan hệ (relationship) bằng dấu hai dấu gạch ngang với dấu lớn hơn, bé hơn (--> và <--). Dấu lớn hơn, bé hơn thể hiện hướng quan hệ. Giữa hai dấu gạch, ta biểu diển tên quan định danh (nếu có) và tên quan hệ trong dấu ngoặc vuông, ngăn cách bằng dấu hai chấm. Ví dụ:  <-[:KNOWS]-
+\end{itemize}
+
+\begin{lstlisting}[caption={Cypher query từ người tên Jim}, label={lst:cypherjim3}]
+MATCH (a:Person{name:'Jim'})-[:KNOWS]->(b)-[:KNOWS]->(c),
+(a)-[:KNOWS]->(c) 
+RETURN b, c 
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Cypher query từ người tên Jim sử dụng WHERE}, label={lst:cypherjim4}]
+MATCH (a:Person{name:'Jim'})-[:KNOWS]->(b)-[:KNOWS]->(c),
+(a)-[:KNOWS]->(c) 
+WHERE a.name = 'Jim'
+RETURN b, c 
+\end{lstlisting}
+
+Listing \ref{lst:cypherjim3} và listing \ref{lst:cypherjim4} dùng để truy vấn mối quan hệ từ nút có name giá trị Jim. Nhưng ở listing \ref{lst:cypherjim4} thay vì gắn thuộc tính vào vế MATCH thì ta dùng vế WHERE để tìm nút theo thuộc tính.   
+
+\subsection{RETURN}
+Vế RETURN trả về những nút, hoặc quan hệ được ràng buộc vào những định danh được liệt kê trong vế RETURN. Listing \ref{lst:cypherjim3} trả về nút có định danh b và nút có định danh c. 
+
+\subsection{Tạo thêm nút và quan hệ với CREATE}
+Vế CREATE kèm theo hình vẽ ASCII để tạo sơ đồ theo hình vẽ ấy. Listing \ref{lst:create1} tạo mới một nút có nhãn là CAT và gán thuộc tính name có giá trị là Pusheen. Listing \ref{lst:create1} tạo hai nút và quan hệ từ nút có thuộc tính name là Pusheen qua nút có thuộc tính name là Stormy. Ở vế CREATE, mối quan hệ luôn luôn có hướng vì Neo4j chỉ cho phép quan hệ có hướng.
+
+\begin{lstlisting}[caption={Cypher tạo mới nút}, label={lst:create1}]
+CREATE (cat:CAT{name:"Pusheen"})
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Cypher tạo mới hai nút và quan hệ giữa hai nút}, label={lst:create2}]
+CREATE (:CAT{name:"Pusheen"})-[:LIKES]->(:CAT{name:"Stormy"})
+\end{lstlisting}
+
+Ngoài ra, có thể kết hợp với vế MATCH để tạo thêm đồ thị có liên kết với một phần đồ thị đã có trước đó. 
+Ở listing \ref{lst:create3}, vế MATCH nút CAT có thuộc tính name mang giá trị Pusheen và gắn định danh là a. Sau đó, vế CREATE tạo nút CAT có thuộc tính name là Stormy, và tạo quan hệ hướng từ nút định danh a sang nút mới tạo 
+
+\begin{lstlisting}[caption={Cypher tạo nút và quan hệ nối với nút có sẵn}, label={lst:create3}]
+MATCH (a:CAT{name:"Pusheen"})
+CREATE (a)-[:LIKES]->(:CAT{name:"Stormy"})
+\end{lstlisting}
 
 
-Comments can be added to the margins of the document using the \todo{Here's a comment in the margin!} todo command, as shown in the example on the right. You can also add inline comments too:
+\subsection{Một vài vế khác}
 
-\todo[inline, color=green!40]{This is an inline comment.}
+MERGE: đảm bảo trong đồ thì tồn tại cái sơ đồ được cung cấp bằng cách tái sử dụng nút và quan hệ thỏa các điều kiện cho trước, hoặc tạo các nút và quan hệ mới. 
+
+DELETE: xóa nút, quan hệ, thuộc tính. (Ví dụ listing \ref{lst:cypherdelete})
+\begin{lstlisting}[caption={Cypher xóa}, label={lst:cypherdelete}]
+MATCH (a:CAT{name:"Tom"})
+DELETE a
+\end{lstlisting}
+
+SET: thêm, chỉnh sửa thuộc tính (ví dụ listing \ref{lst:cypherset})
+\begin{lstlisting}[caption={Cypher sửa}, label={lst:cypherset}]
+MATCH (a:CAT{name:"Tom"})
+SET a.name="Thomas", a.age=1
+\end{lstlisting}
+
+UNION: gộp kết quả của hai hoặc nhiều truy vấn 
+
+START: Chọn một hoặc một số điểm bắt đầu (nút hoặc quan hệ). START không được phát triển nữa. Ta nên dùng MATCH 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Comments can be added to the margins of the document using the \todo{Here's a comment in the margin!} todo command, as shown in the example on the right. You can also add inline comments too:
+
+% \todo[inline, color=green!40]{This is an inline comment.}
+
+
 
 \subsection{Tables and Figures}
 
